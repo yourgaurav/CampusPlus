@@ -23,4 +23,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false , length=30)
     private UserRole role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 }
