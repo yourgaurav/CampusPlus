@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
@@ -24,10 +25,11 @@ public class DepartmentService {
     }
 
     // to creating the table
+    @Transactional
     public DepartmentResponse createDepartment(DepartmentRequest request) {
 
-        if(departmentRepository.existsById(request.getName())){
-            throw new DepartmentNotFoundException("Department already exists with name:"
+        if(departmentRepository.existsByName(request.getName())){
+            throw new DuplicateDepartmentException("Department already exists with name:"
                     + request.getName());
         }
 
@@ -46,6 +48,7 @@ public class DepartmentService {
     }
 
     // to fetch the all the departments
+
     public List<DepartmentResponse> getAllDepartments() {
 
         List<Department> departments = departmentRepository.findAll();
@@ -98,6 +101,7 @@ public class DepartmentService {
     }
 
     // to delete the department by id
+    @Transactional
     public void deleteDepartment(Long id){
         if(!departmentRepository.existsById(id)){
             throw new DepartmentNotFoundException("Department not found" + id);
